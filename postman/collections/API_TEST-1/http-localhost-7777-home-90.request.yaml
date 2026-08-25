@@ -1,6 +1,0 @@
-$kind: http-request
-name: http://localhost:7777/home/90
-description: ""
-url: http://localhost:7777/home/90
-method: GET
-order: 1786642439935
