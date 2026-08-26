@@ -1,11 +1,39 @@
+const mongodb = require("mongodb");
 const express = require("express");
+const { authAdmin, authUser } = require("./Middleware/auth");
+const connetionDB = require("./config/database");
+
+const User = require("./models/user");
 
 const app = express();
 
-const { authAdmin , authUser} = require("./Middleware/auth");
+app.post("/sign-up",async(req,res)=>{
+  const user = new User({
+    firstName:"Sahil",
+    lastName:"Jadav",
+    emailId:"sahil3301@gmail.com",
+    password:5690,
+    gender:"male",
+    age:19
+  });
+  await user.save();
+  res.send("Users Data inserted in document succussfully");
+})
 
 
-app.use("/admin", authAdmin);
+connetionDB()
+  .then(() => {
+    console.log("Database Connedction established ......");
+    app.listen(7777, () => {
+      console.log("Server is Succussfully Running  on http://localhost:7777");
+    });
+  })
+  .catch((err) => {
+    console.error("Database connection cannot establishe....");
+    console.error(err.message);
+  });
+
+/*app.use("/admin", authAdmin);
 
 app.get("/admin/getAllData",(req, res )=>{
   //logic for fetching User data
@@ -14,7 +42,11 @@ app.get("/admin/getAllData",(req, res )=>{
 
 app.get("/user",authUser,(req,res)=>{
   res.send("Hey there I am a User");
-})
+});
+
+app.get("/user/login",(req,res)=>{
+  res.send("User login Sucussfully");
+});
 
 app.get("/admin/UpdateProfile",(req, res)=>{
   //logic for Update user profile
@@ -24,7 +56,7 @@ app.get("/admin/UpdateProfile",(req, res)=>{
 app.get("/admin/DeleteUser",(req, res)=>{
   //logic for Delete user
   res.send("User deleted  succussfully");
-});
+});*/
 
 // app.get("/user/:userID/:name/:password", ( req, res)=>{ // dynamic routes
 //     console.log(req.params);        // reads dynamic parameters in routes
@@ -55,7 +87,3 @@ app.get("/admin/DeleteUser",(req, res)=>{
 // app.use("/", (req, res) => {
 //   res.send("This is the response to the request");
 // });
-
-app.listen(7777, () => {
-  console.log("Server is Succussfully Running  on http://localhost:7777");
-});
