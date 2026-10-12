@@ -4,6 +4,7 @@ const { authAdmin, authUser } = require("./Middleware/auth");
 const connetionDB = require("./config/database");
 
 const User = require("./models/user");
+const { Model } = require("mongoose");
 
 const app = express();
 
@@ -21,6 +22,39 @@ app.post("/sign-up",async(req,res)=>{
       res.status(400).send("Error cannot insert user info to database");
   }
   
+});
+
+app.get("/users", async (req,res)=>{
+  const useremail = req.body.emailId;
+  try{
+      const users = await User.find({emailId: useremail});
+      if(users.length === 0){
+        res.status(404).send("user not found")
+      }else{
+        res.send(users);
+      }
+     
+  }catch{
+    res.status(500).send("Something went wrong");
+  }
+
+});
+
+// Feed API - GET/feed - get all the users from database
+app.get("/feed", async (req,res)=>{
+  
+  try{
+      const users = await User.find({});
+      if(users.length === 0){
+        res.status(404).send("user not found")
+      }else{
+        res.send(users);
+      }
+     
+  }catch{
+    res.status(500).send("Something went wrong");
+  }
+
 });
 
 
