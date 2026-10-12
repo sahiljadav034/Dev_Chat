@@ -7,18 +7,21 @@ const User = require("./models/user");
 
 const app = express();
 
+app.use(express.json());
+
 app.post("/sign-up",async(req,res)=>{
-  const user = new User({
-    firstName:"Sahil",
-    lastName:"Jadav",
-    emailId:"sahil3301@gmail.com",
-    password:5690,
-    gender:"male",
-    age:19
-  });
-  await user.save();
+  
+  //Creating new instance of model
+  const user = new User(req.body);
+
+  try{
+    await user.save();
   res.send("Users Data inserted in document succussfully");
-})
+  }catch{
+      res.status(400).send("Error cannot insert user info to database");
+  }
+  
+});
 
 
 connetionDB()
